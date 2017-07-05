@@ -22,6 +22,16 @@ defmodule FictionalPartner.Web.Controllers.ReceiveEventController do
     |> send_resp
   end
 
+  @spec ask_redirect(conn :: Plug.Conn.t, params :: map()) :: Plug.Conn.t
+  def block(conn, %{"time_blocked" => time_blocked}) do
+    log_request_data(conn)
+    time_blocked
+    |> String.to_integer
+    |> :timer.sleep
+
+    send_resp(conn, 200, "")
+  end
+
   defp log_request_data(conn) do
     body = conn.body_params
     headers = conn.req_headers
