@@ -21,5 +21,7 @@ defmodule FictionalPartner.Router do
 
     post "/receive_event/reply/:partner_reply", ReceiveEventController, :reply
     post "/receive_event/reply/:partner_reply/ask_redirect", ReceiveEventController, :ask_redirect
+
+    post "/receive_event/block/:time_blocked", ReceiveEventController, :block
   end
 end
