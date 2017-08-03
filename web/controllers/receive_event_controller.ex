@@ -22,6 +22,20 @@ defmodule FictionalPartner.Web.Controllers.ReceiveEventController do
     |> send_resp
   end
 
+  def validate_signature(conn, %{"algorithm" => algorithm, "secret" => secret}) do
+    signature = hd(Plug.Conn.get_req_header(conn, "x-hub-signature"))
+    payload = Poison.encode!(conn.body_params)
+    Logger.info ["PAYLOAD: ", inspect(payload)]
+    Logger.info ["SIGNATURE: ", inspect(Plug.Conn.get_req_header(conn, "x-hub-signature"))]
+    result = ReceiveEvent.validate_signature(String.to_atom(algorithm), secret, payload, signature)
+
+    if result do
+      resp(conn, 200, "")
+    else
+      resp(conn, 400, "")
+    end
+  end
+
   @spec ask_redirect(conn :: Plug.Conn.t, params :: map()) :: Plug.Conn.t
   def block(conn, %{"time_blocked" => time_blocked}) do
     log_request_data(conn)
