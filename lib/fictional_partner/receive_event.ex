@@ -19,4 +19,10 @@ defmodule FictionalPartner.ReceiveEvent do
     |> resp(parsed_status_code, "")
     |> put_resp_header("location", location_url)
   end
+
+  def validate_signature(algorithm, secret, payload, signature) do
+    partner_generated_signature = algorithm |> :crypto.hmac(secret, payload) |> Base.encode16
+
+    partner_generated_signature == signature
+  end
 end
